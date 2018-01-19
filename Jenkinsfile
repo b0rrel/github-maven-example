@@ -27,7 +27,7 @@ node {
       def uploadSpec = """{
          "files": [
              {
-               "pattern": "github-maven-example-*-sources.jar",
+               "pattern": "example/target/github-maven-example-*-sources.jar",
                "target": "test-repo/test"
              }
           ]
