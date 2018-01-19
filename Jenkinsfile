@@ -24,14 +24,14 @@ node {
       archive 'target/*.jar'
    }
    stage('Deploy') {
-      def uploadSpec = {
+      def uploadSpec = """{
          "files": [
              {
                "pattern": "bazinga/*froggy*.zip",
                "target": "bazinga-repo/froggy-files/"
              }
           ]
-       }
+       }"""
       server.upload(uploadSpec)
    }
 }
