@@ -1,10 +1,10 @@
-node {
-   options {
-      buildDiscarder(logRotator(numToKeepStr: '5'))
-   }
-   
+pipline {   
    def mvnHome
    stage('Preparation') { // for display purposes
+      // Set logRotator to 5 days
+      options {
+         buildDiscarder(logRotator(numToKeepStr: '5'))
+      }
       // Get some code from a GitHub repository
       git 'https://github.com/Bankers88/github-maven-example.git'
       // Get the Maven tool.
