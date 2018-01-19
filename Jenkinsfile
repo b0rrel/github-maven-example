@@ -12,7 +12,7 @@ node {
       // Run the maven build
       sh "pwd"
       sh "cd example"
-      sh "pwd"
+      echo "I’m now in $PWD"
       sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
    }
    stage('Results') {
