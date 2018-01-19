@@ -27,8 +27,8 @@ node {
       def uploadSpec = """{
          "files": [
              {
-               "pattern": "bazinga/*froggy*.zip",
-               "target": "bazinga-repo/froggy-files/"
+               "pattern": "github-maven-example-*-sources.jar",
+               "target": "test-repo/test"
              }
           ]
        }"""
