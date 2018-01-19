@@ -1,5 +1,6 @@
 node {   
    def mvnHome
+   def server = Artifactory.server 'art'
    
    properties([[$class: 'BuildDiscarderProperty', strategy: [$class: 'LogRotator', artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '10']]]);
    
@@ -21,5 +22,16 @@ node {
    stage('Results') {
       junit '**/target/surefire-reports/TEST-*.xml'
       archive 'target/*.jar'
+   }
+   stage('Deploy') {
+      def uploadSpec = {
+         "files": [
+             {
+               "pattern": "bazinga/*froggy*.zip",
+               "target": "bazinga-repo/froggy-files/"
+             }
+          ]
+       }
+      server.upload(uploadSpec)
    }
 }
