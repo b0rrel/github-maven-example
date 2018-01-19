@@ -18,7 +18,7 @@ public class WidgetTest {
 	@Test
 	public void defaultState() {
 		Widget widget = new Widget();
-		assertTrue(widget.isEnabled());
+		assertFalse(widget.isEnabled());
 	}
 
 	/**
