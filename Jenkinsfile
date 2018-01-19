@@ -10,10 +10,9 @@ node {
    }
    stage('Build') {
       // Run the maven build
-      sh "pwd"
-      sh "cd example"
-      echo "I’m now in $PWD"
-      sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
+      dir('example') {
+         sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
+      }
    }
    stage('Results') {
       junit '**/target/surefire-reports/TEST-*.xml'
