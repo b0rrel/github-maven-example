@@ -1,4 +1,4 @@
-pipline {   
+node {   
    def mvnHome
    stage('Preparation') { // for display purposes
       // Set logRotator to 5 days
