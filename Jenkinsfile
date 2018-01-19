@@ -10,6 +10,7 @@ node {
    }
    stage('Build') {
       // Run the maven build
+      sh "pwd"
       sh "cd /example"
       sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
    }
