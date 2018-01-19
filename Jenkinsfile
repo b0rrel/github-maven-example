@@ -1,9 +1,7 @@
 node {   
    def mvnHome
    
-   options {
-      timeout(time: 1, unit: 'HOURS') 
-   }
+   properties([[$class: 'BuildDiscarderProperty', strategy: [$class: 'LogRotator', artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '10']]]);
    
    stage('Preparation') { // for display purposes
       
