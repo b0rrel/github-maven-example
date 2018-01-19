@@ -4,34 +4,35 @@ node {
    
    properties([[$class: 'BuildDiscarderProperty', strategy: [$class: 'LogRotator', artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '10']]]);
    
-   stage('Preparation') { // for display purposes
-      
-      // Get some code from a GitHub repository
+   stage('Clone') { // for display purposes
+      // Clone code from GitHub repository
       git 'https://github.com/Bankers88/github-maven-example.git'
-      // Get the Maven tool.
-      // ** NOTE: This 'M3' Maven tool must be configured
-      // **       in the global configuration.           
-      mvnHome = tool 'M3'
    }
-   stage('Build') {
-      // Run the maven build
-      dir('example') {
-         sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
-      }
+   
+   stage('Artifactory configuration') {
+      server = Artifactory.server art
+      rtMaven = Artifactory.newMavenBuild()
+      rtMaven.tool = tool 'M3'
+      rtMaven.deployer releaseRepo: 'libs-release-local', snapshotRepo: 'libs-snapshot-local', server: server
+      rtMaven.resolver releaseRepo: 'libs-release', snapshotRepo: 'libs-snapshot', server: server
+      rtMaven.deployer.deployArtifacts = false // Disable artifacts deployment during Maven run
+      
+      buildInfo = Artifactory.newBuildInfo()
    }
-   stage('Results') {
-      junit '**/target/surefire-reports/TEST-*.xml'
-      archive 'target/*.jar'
+   
+   stage ('Test') {
+      rtMaven.run pom: 'example/pom.xml', goals: 'clean test'
    }
-   stage('Deploy') {
-      def uploadSpec = """{
-         "files": [
-             {
-               "pattern": "example/target/github-maven-example-*-sources.jar",
-               "target": "test-repo/test"
-             }
-          ]
-       }"""
-      server.upload(uploadSpec)
-   }
+   
+   stage ('Install') {
+        rtMaven.run pom: 'example/pom.xml', goals: 'install', buildInfo: buildInfo
+    }
+ 
+    stage ('Deploy') {
+        rtMaven.deployer.deployArtifacts buildInfo
+    }
+        
+    stage ('Publish build info') {
+        server.publishBuildInfo buildInfo
+    }
 }
